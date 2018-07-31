@@ -44,6 +44,18 @@ public class RedPacket {
     private int recursiveCount = 0 ;
 
     private List<Integer> splitRedPacket(int money,int count){
+        
+        if(MAX_MONEY*count<money){
+    		throw new RuntimeException("单个红包金额不能超过"+MAX_MONEY+"分");
+    	}
+        
+          //只能均分判断
+        boolean avg = false;
+        if(MAX_MONEY*count==money){
+        	avg = true;
+        }
+        
+        
         List<Integer> moneys = new LinkedList<>() ;
 
         //计算出最大红包
@@ -51,11 +63,18 @@ public class RedPacket {
         max = max > MAX_MONEY ? MAX_MONEY : max ;
 
         for (int i = 0 ; i< count ; i++){
-            //随机获取红包
-            int redPacket = randomRedPacket(money, MIN_MONEY,max,count - i) ;
-            moneys.add(redPacket);
-            //总金额每次减少
-            money -= redPacket ;
+            
+            if(avg){
+                 moneys.add(MAX_MONEY);
+            }
+            else{
+                //随机获取红包
+                int redPacket = randomRedPacket(money, MIN_MONEY,max,count - i) ;
+                moneys.add(redPacket);
+                //总金额每次减少
+                money -= redPacket ;
+            }
+         
         }
 
         return moneys ;
